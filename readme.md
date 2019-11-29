@@ -36,14 +36,14 @@ introduction:
 ![ASM](https://raw.githubusercontent.com/henry510859/TWDC_blog_photo/master/802.1x%20自動佈署/Synology%20router%20管理介面.png)
  ▼ 點選套件中心
  ![ASM](https://raw.githubusercontent.com/henry510859/TWDC_blog_photo/master/802.1x%20自動佈署/套件中心.png)
-▼ 選擇 RADIUS server 下載
-▼ 下載完成後點開打開 RADIUS server 應用程式
-▼ 這邊可以選擇驗證的方式，如果選擇 **LDAP 使用者** 或 **網域使用者** 務必先讓 RT2600ac **加入LDAP 伺服器或是網域中**
-▼ 點選用戶端，這邊用戶端設定並不是建立使用者帳號密碼而是給 **Wi-Fi 存取點** 使用
-▼ 點選新增，設定名稱，這邊建議設定成好辨識的名稱
-▼ 共用金鑰為等等設定 **WPA2 enterprise** 所使用，
-▼ IP 位址設定成 **Wi-Fi 存取點** 的 IP 位址
-這樣 RADIUS server 的設定就完成囉
+▼ 選擇 RADIUS server 下載  
+▼ 下載完成後點開打開 RADIUS server 應用程式  
+▼ 這邊可以選擇驗證的方式，如果選擇 **LDAP 使用者** 或 **網域使用者** 務必先讓 RT2600ac **加入LDAP 伺服器或是網域中**  
+▼ 點選用戶端，這邊用戶端設定並不是建立使用者帳號密碼而是給 **Wi-Fi 存取點** 使用  
+▼ 點選新增，設定名稱，這邊建議設定成好辨識的名稱  
+▼ 共用金鑰為等等設定 **WPA2 enterprise** 所使用  
+▼ IP 位址設定成 **Wi-Fi 存取點** 的 IP 位址  
+這樣 RADIUS server 的設定就完成囉  
 
 ### SSL 憑證
 
@@ -91,15 +91,15 @@ CA 建立好之後就可以用來簽署上面建立的 csr
   ``openssl x509 -req -in server.csr -CA ca.cer -CAkey ca.key -CAcreateserial -out server.crt -days 365 -sha256``
 
 ### 憑證匯入  
-當憑證建立完成後要匯入到 RT2600ac 裡面
-▼ 打開 RT2600ac 管理頁面
-▼ 點選控制台
-▼ 點選服務
-▼ 點選憑證
-▼ 點選匯入憑證
-▼ 在私鑰上傳製作的主機私鑰
-▼ 在憑證上傳簽署的憑證
-▼ 在中繼憑證上傳 CA 的憑證
+當憑證建立完成後要匯入到 RT2600ac 裡面  
+▼ 打開 RT2600ac 管理頁面  
+▼ 點選控制台  
+▼ 點選服務  
+▼ 點選憑證  
+▼ 點選匯入憑證  
+▼ 在私鑰上傳製作的主機私鑰  
+▼ 在憑證上傳簽署的憑證  
+▼ 在中繼憑證上傳 CA 的憑證  
 
 ### 設定 WPA2 enterprise
 要設定WPA2 enterprise之前有兩個條件，缺一不可
@@ -108,11 +108,11 @@ CA 建立好之後就可以用來簽署上面建立的 csr
 
 當以上都設定完成，就可以開始設定 WPA2 enterprise
 
-▼ 打開 RT2600ac 管理頁面
-▼ 點選Wi-Fi Connect
-▼ 點選無線網路
-▼ 安全層級選擇 WPA2-Enterprise
-▼ 輸入 RADIUS server IP位址
-▼ 連接阜編號填寫1812
-▼ 共用金鑰填寫在 RADIUS server 用戶端的共用金鑰
-▼ 完成後點選套用，套用後務必把 RT2600ac **重新開機**
+▼ 打開 RT2600ac 管理頁面  
+▼ 點選Wi-Fi Connect  
+▼ 點選無線網路  
+▼ 安全層級選擇 WPA2-Enterprise  
+▼ 輸入 RADIUS server IP位址  
+▼ 連接阜編號填寫1812  
+▼ 共用金鑰填寫在 RADIUS server 用戶端的共用金鑰  
+▼ 完成後點選套用，套用後務必把 RT2600ac **重新開機**  

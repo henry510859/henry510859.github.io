@@ -15,10 +15,10 @@ introduction:
 ---
 802.1X是IEEE制定的一項身分驗證標準，而非單一的網路通訊協定，在802.1X的架構下，企業可以透過前端的網路設備，像是交換器、無線AP等，要求使用者輸入連線所需要的一組帳號、密碼，向後端的帳號伺服器發出驗證的請求，確認使用者具備存取網路資源的權限之後，前端的設備就會開啟網路埠（無線網路的網路埠是虛擬的），允許連線通過。
 
-802.1X 驗證分為三個基本部分
-  1.**客戶端** 在 Wi-Fi 工作站上所執行的軟體用戶端。
-  2.**設備端** Wi-Fi 存取點。
-  3.**驗證伺服器** 驗證資料庫，通常會是 Cisco Secure Access 或 freeradius 等 radius 伺服器。
+802.1X 驗證分為三個基本部分  
+  1. **客戶端** 在 Wi-Fi 工作站上所執行的軟體用戶端。
+  2. **設備端** Wi-Fi 存取點。
+  3. **驗證伺服器** 驗證資料庫，通常會是 Cisco Secure Access 或 freeradius 等 radius 伺服器。
 
 ![802.1x 示意圖](https://raw.githubusercontent.com/henry510859/TWDC_blog_photo/master/802.1x%20%E8%87%AA%E5%8B%95%E4%BD%88%E7%BD%B2/802.1x.png)
 
@@ -101,7 +101,7 @@ CA 建立好之後就可以用來簽署上面建立的 csr
 ▼ 在憑證上傳簽署的憑證  
 ▼ 在中繼憑證上傳 CA 的憑證  
 
-### 設定 WPA2 enterprise
+### 設定 WPA2 enterprise  
 要設定WPA2 enterprise之前有兩個條件，缺一不可
 1. RADIUS server
 2. 憑證
@@ -116,3 +116,58 @@ CA 建立好之後就可以用來簽署上面建立的 csr
 ▼ 連接阜編號填寫1812  
 ▼ 共用金鑰填寫在 RADIUS server 用戶端的共用金鑰  
 ▼ 完成後點選套用，套用後務必把 RT2600ac **重新開機**  
+
+這樣就可以順利的使用802.1x 網路囉  
+想知道更進階的自動佈署就繼續看下去吧  
+
+## jamf Pro 自動佈署
+
+在 jamf Pro 裡面我們可以設定讓裝置自動的連上我們剛才所建立的802.1x網路  
+首先要先把憑證匯入到 jamf Pro 裡面  
+但是 jamf Pro 要匯入前必須先把憑證跟私鑰合併成一個pfx檔案才可以匯入  
+所以要再次使用 OpenSSL 來操作  
+輸入以下的指令就可以囉  
+
+``openssl pkcs12 -export -in server.crt -inkey server.key -out server.pfx``
+
+在輸入之後會需要填寫一組密碼，等等會用到  
+
+▼ 打開 jamf Pro 管理介面  
+▼ 點選 Computers  
+▼ 點選 Configuration Profiles  
+▼ 點選 New  
+▼ 在 NAME 填寫描述檔名稱  
+▼ 在 distribution method 選擇 install automatically  
+▼ 點選 network  
+▼ 點選 configure  
+▼ 在 SERVICE SET IDENTIFIER 填寫 Wi-Fi 的名稱  
+▼ 在 SECURITY TYPE 點選 WPA2 Enterprise  
+▼ 在 Protocols 點選 PEAP  
+▼ 在 USERNAME以及 PASSWORD 填寫連線的帳號密碼，在 VERIFY PASSWORD 再填一次密碼  
+▼ 點選 Certificate  
+▼ 點選 configure  
+▼ 在 CERTIFICATE NAME 填寫憑證名稱  
+▼ 在 SELECT CERTIFICATE OPTION 選擇 Upload  
+▼ 點選 Upload Certificate 來上傳剛才合併的憑證  
+▼ 在 PASSWORD 以及 VERIFY PASSWORD 填寫剛才合併憑證的密碼  
+▼ 點選 ＋ 新增憑證  
+▼ 在 CERTIFICATE NAME 填寫憑證名稱  
+▼ 在 SELECT CERTIFICATE OPTION 選擇 Upload  
+▼ 點選 Upload Certificate 來上傳 CA 憑證  
+▼ 在 PASSWORD 以及 VERIFY PASSWORD 填寫 CA 憑證的密碼  
+▼ 回到 network      
+▼ 點選 trust  
+▼ 點選 CA 憑證    
+▼ 點選 Scope  
+▼ 選擇要佈署的裝置  
+▼ 設定完成後點選 Save  
+
+### 疑難排解
+
+Ｑ：為什麼 Wi-Fi 沒有自動連上?  
+Ａ：先確定在系統偏好設定裡面的描述檔有 802.1x 網路描述檔，裡面必須要包含兩個憑證以及一個 Wi-Fi network  
+      如果沒有出現的話請打開 terminal ，輸入下列指令  
+      ``
+``sudo Jamf recon``
+
+再重新進入描述檔裡面查看有沒有出現802.1x 網路描述檔。  

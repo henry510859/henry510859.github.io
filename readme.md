@@ -50,7 +50,7 @@ introduction:
 SSL 憑證設計一組編碼連結於客戶端與設備端之間，在解密以前，資料在網路之間傳送時是無法被讀取的，SSL憑證保護這些資料，以避免被其它網路的某些人監控，因為他們無法知道已經加密的資料。
 
 在 RADIUS server 上設定好憑證是非常重要的，因為安全的憑證是要付費的，建議 **不要自己簽憑證** ，一定要去購買才能確保網路安全。
-####建立私鑰以及 CSR
+####建立私鑰以及 CSR  
 我們使用OpenSSL來建立所需要的憑證
 1. 建立一組私鑰給主機
 
@@ -75,7 +75,7 @@ An optional company name []:
 ```
 這些資訊非常重要，請謹慎填寫。
 
-####建立 CA
+####建立 CA  
 因為教學方便，我們自行建立 CA 來簽署憑證
 1. 建立 CA 的私鑰
 
@@ -85,12 +85,12 @@ An optional company name []:
 
 ``openssl req -x509 -new -nodes -key ca.key -sha256 -days 365 -out ca.cer``
 
-####CA 簽署 CSR 來產生憑證
+####CA 簽署 CSR 來產生憑證  
 CA 建立好之後就可以用來簽署上面建立的 csr
 
   ``openssl x509 -req -in server.csr -CA ca.cer -CAkey ca.key -CAcreateserial -out server.crt -days 365 -sha256``
 
-###憑證匯入
+###憑證匯入  
 當憑證建立完成後要匯入到 RT2600ac 裡面
 ▼ 打開 RT2600ac 管理頁面
 ▼ 點選控制台
